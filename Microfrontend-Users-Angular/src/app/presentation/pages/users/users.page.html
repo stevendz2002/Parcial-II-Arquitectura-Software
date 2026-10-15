@@ -1,0 +1,17 @@
+<section class="users-section">
+  <h2>Gestión de Usuarios (Microfrontend 2 - Spring Boot :8081)</h2>
+
+  <div class="actions-bar">
+    <button type="button" (click)="loadAllUsers()">Caso de Uso 1: Todos</button>
+    <button type="button" (click)="loadActiveUsers()">Caso de Uso 2: Activos</button>
+    <button type="button" (click)="loadAdminUsers()">Caso de Uso 3: Administradores</button>
+  </div>
+
+  @if (state.loading) {
+    <app-alert message="Cargando usuarios..." type="info"></app-alert>
+  } @else if (state.error) {
+    <app-alert message="Error al consultar el microservicio de usuarios." type="error"></app-alert>
+  } @else {
+    <app-users-table [users]="state.data"></app-users-table>
+  }
+</section>
