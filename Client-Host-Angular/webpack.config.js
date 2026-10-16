@@ -6,6 +6,6 @@ module.exports = withModuleFederationPlugin({
     productsMfe: 'http://localhost:4201/remoteEntry.js',
   },
   shared: {
-    ...shareAll({ singleton: true, strictVersion: true, requiredVersion: 'auto' }),
+    ...shareAll({ singleton: true, strictVersion: false, requiredVersion: 'auto' }),
   },
 });
