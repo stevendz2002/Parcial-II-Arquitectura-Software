@@ -26,3 +26,17 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
+
+# IDE
+.idea/
+*.iml
+
+# Java specific (Maven)
+target/
+
+# Monorepo nested outputs
+node_modules/
+dist/
+coverage/
+package-lock.json
