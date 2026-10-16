@@ -1,7 +1,7 @@
-package com.uceva.users.application.usecases;
+package com.uceva.users.application.usecase;
 
-import com.uceva.users.domain.models.User;
-import com.uceva.users.domain.repositories.UserRepository;
+import com.uceva.users.domain.entity.User;
+import com.uceva.users.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 

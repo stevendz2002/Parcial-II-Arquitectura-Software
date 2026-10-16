@@ -1,10 +1,23 @@
-package com.uceva.users.domain.models;
+package com.uceva.users.domain.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Entidad que representa un usuario del sistema")
 public class User {
+
+    @Schema(description = "Identificador único del usuario", example = "550e8400-e29b-41d4-a716-446655440000")
     private String id;
+
+    @Schema(description = "Nombre completo del usuario", example = "Usuario UCEVA 1")
     private String name;
+
+    @Schema(description = "Correo electrónico del usuario", example = "usuario1@uceva.edu.co")
     private String email;
+
+    @Schema(description = "Rol del usuario en el sistema", example = "USER", allowableValues = {"USER", "ADMIN"})
     private String role;
+
+    @Schema(description = "Indica si el usuario está activo", example = "true")
     private boolean active;
 
     public User() {}

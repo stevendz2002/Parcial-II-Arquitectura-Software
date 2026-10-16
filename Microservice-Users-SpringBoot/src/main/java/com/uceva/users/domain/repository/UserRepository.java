@@ -1,6 +1,6 @@
-package com.uceva.users.domain.repositories;
+package com.uceva.users.domain.repository;
 
-import com.uceva.users.domain.models.User;
+import com.uceva.users.domain.entity.User;
 import java.util.List;
 
 public interface UserRepository {
