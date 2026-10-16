@@ -6,7 +6,8 @@
     "ng": "ng",
     "start": "start /b node redirect-server.js && ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development"
+    "watch": "ng build --watch --configuration development",
+    "doc": "npx @compodoc/compodoc -p tsconfig.doc.json -s"
   },
   "dependencies": {
     "@angular-architects/module-federation": "^17.0.0",
