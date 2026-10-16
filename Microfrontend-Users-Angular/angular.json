@@ -1,0 +1,74 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "users-mfe": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "ngx-build-plus:browser",
+          "options": {
+            "outputPath": "dist/users-mfe",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "tsconfig.app.json",
+            "extraWebpackConfig": "./webpack.config.js",
+            "commonChunk": false,
+            "assets": [],
+            "styles": ["src/styles.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "ngx-build-plus:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "users-mfe:build:production"
+            },
+            "development": {
+              "buildTarget": "users-mfe:build:development"
+            }
+          },
+          "defaultConfiguration": "development",
+          "options": {
+            "port": 4202,
+            "publicHost": "http://localhost:4202",
+            "extraWebpackConfig": "./webpack.config.js"
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "16abaeb7-8f17-4d3c-b940-3d372c54dde8"
+  }
+}
