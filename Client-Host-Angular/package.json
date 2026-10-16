@@ -10,23 +10,23 @@
     "doc": "npx @compodoc/compodoc -p tsconfig.doc.json -s"
   },
   "dependencies": {
-    "@angular-architects/module-federation": "^17.0.0",
-    "@angular/common": "^17.3.12",
-    "@angular/compiler": "^17.3.12",
-    "@angular/core": "^17.3.12",
-    "@angular/platform-browser": "^17.3.12",
-    "@angular/platform-browser-dynamic": "^17.3.12",
-    "@angular/router": "^17.3.12",
-    "rxjs": "~7.8.1",
-    "tslib": "^2.6.0",
-    "zone.js": "~0.14.10"
+    "@angular-architects/module-federation": "^20.0.0",
+    "@angular/common": "20.3.14",
+    "@angular/compiler": "20.3.14",
+    "@angular/core": "20.3.14",
+    "@angular/platform-browser": "20.3.14",
+    "@angular/router": "20.3.14",
+    "rxjs": "7.8.0",
+    "tslib": "2.3.0",
+    "zone.js": "0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^17.3.11",
-    "@angular/cli": "^17.3.11",
-    "@angular/compiler-cli": "^17.3.12",
-    "ngx-build-plus": "^17.0.0",
+    "@angular-devkit/build-angular": "20.3.12",
+    "@angular/build": "20.3.12",
+    "@angular/cli": "20.3.12",
+    "@angular/compiler-cli": "20.3.14",
+    "ngx-build-plus": "^20.0.0",
     "sass": "~1.69.7",
-    "typescript": "~5.4.5"
+    "typescript": "5.9.2"
   }
 }

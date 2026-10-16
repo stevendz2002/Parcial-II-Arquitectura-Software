@@ -1,0 +1,53 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <h2 class="h3 fw-bold mb-1">Módulo de Productos</h2>
+      <p class="text-muted mb-0">Gestión de productos con Clean Architecture y Microfrontends</p>
+    </div>
+
+    <!-- Botones de alternancia entre los 3 Casos de Uso -->
+    <div class="btn-group" role="group" aria-label="Filtro de Casos de Uso de Productos">
+      <button
+        type="button"
+        class="btn"
+        [class.btn-primary]="activeFilter === 'ALL'"
+        [class.btn-outline-primary]="activeFilter !== 'ALL'"
+        (click)="loadAllProducts()">
+        Todos los Productos
+      </button>
+
+      <button
+        type="button"
+        class="btn"
+        [class.btn-success]="activeFilter === 'AVAILABLE'"
+        [class.btn-outline-success]="activeFilter !== 'AVAILABLE'"
+        (click)="loadAvailableProducts()">
+        Productos Disponibles
+      </button>
+
+      <button
+        type="button"
+        class="btn"
+        [class.btn-info]="activeFilter === 'FEATURED'"
+        [class.btn-outline-info]="activeFilter !== 'FEATURED'"
+        (click)="loadFeaturedProducts()">
+        Productos Destacados
+      </button>
+    </div>
+  </div>
+
+  <!-- Renderizado condicional según el Estado -->
+  @switch (state) {
+    @case ('loading') {
+      <app-alert alertState="loading" text="Consultando productos desde el microservicio..."></app-alert>
+    }
+
+    @case ('error') {
+      <app-alert alertState="error" [text]="errorMessage"></app-alert>
+    }
+
+    @case ('success') {
+      <app-products-table [products]="products"></app-products-table>
+    }
+  }
+</div>
