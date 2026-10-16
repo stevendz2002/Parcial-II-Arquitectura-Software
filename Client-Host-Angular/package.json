@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "ng": "ng",
-    "start": "start /b node redirect-server.js && ng serve",
+    "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "doc": "npx @compodoc/compodoc -p tsconfig.doc.json -s"

@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 /**
- * Componente raíz del Host encargado de mostrar el Navbar y cargar los microfrontends remotos.
+ * Componente principal del Host encargado de renderizar el Navbar funcional
+ * y gestionar la navegación entre los Microfrontends.
  */
 @Component({
   selector: 'app-root',
@@ -12,6 +13,6 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  /** Título principal de la aplicación Host */
+  /** Título del Host */
   public title = 'Client-Host-Angular';
 }

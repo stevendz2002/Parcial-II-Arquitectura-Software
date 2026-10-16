@@ -1,82 +1,101 @@
 * {
   box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
-  background-color: #f4f6f8;
-  color: #212529;
+  background-color: #f8fafc;
+  color: #0f172a;
 }
 
 .users-section {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 1.5rem;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  margin: 1.5rem auto;
+  max-width: 1100px;
 }
 
 .users-section h2 {
   margin-top: 0;
   color: #1e293b;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.75rem;
 }
 
 .actions-bar {
   display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
   flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.25rem 0;
 }
 
 .actions-bar button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 6px;
-  background-color: #1e293b;
+  background-color: #2563eb;
   color: #ffffff;
-  cursor: pointer;
+  border: none;
+  padding: 0.65rem 1.2rem;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
   font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .actions-bar button:hover {
-  background-color: #3b82f6;
+  background-color: #1d4ed8;
 }
 
-.alert {
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-}
-
-.alert.info {
-  background-color: #e7f1ff;
-  color: #0b5ed7;
-}
-
-.alert.error {
-  background-color: #fdecea;
-  color: #b02a37;
+.actions-bar button:active {
+  transform: scale(0.98);
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: #ffffff;
+  overflow: hidden;
+  border-radius: 0.5rem;
 }
 
 .table th,
 .table td {
-  padding: 0.6rem 0.75rem;
+  padding: 0.85rem 1rem;
   text-align: left;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-.table thead th {
-  background-color: #1e293b;
-  color: #ffffff;
+.table th {
+  background-color: #f1f5f9;
+  color: #334155;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.8rem;
 }
 
 .table tbody tr:hover {
-  background-color: #f1f3f5;
+  background-color: #f8fafc;
+}
+
+.alert {
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  font-weight: 500;
+}
+
+.alert.info {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #93c5fd;
+}
+
+.alert.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
 }
