@@ -1,7 +1,17 @@
 import { Routes } from '@angular/router';
-import { USERS_ROUTES } from './users.routes';
+import { UsersPage } from './presentation/pages/users/users.page';
+import { UserRepository } from './core/domain/repositories/user.repository';
+import { UserSpringbootRepositoryImpl } from './core/infrastructure/repositories/springboot-implementation/user-springboot.repository.impl';
 
 /**
  * Rutas principales del Microfrontend de Usuarios.
  */
-export const routes: Routes = [...USERS_ROUTES];
+export const routes: Routes = [
+  {
+    path: '',
+    component: UsersPage,
+    providers: [
+      { provide: UserRepository, useClass: UserSpringbootRepositoryImpl },
+    ],
+  },
+];
