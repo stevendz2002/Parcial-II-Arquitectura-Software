@@ -8,6 +8,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "compodoc": "npx compodoc -p tsconfig.doc.json",
+    "compodoc:serve": "npx compodoc -p tsconfig.doc.json -s",
+    "compodoc:coverage": "npx compodoc -p tsconfig.doc.json --coverageTest",
     "run:all": "node node_modules/@angular-architects/module-federation/src/server/mf-dev-server.js"
   },
   "prettier": {
