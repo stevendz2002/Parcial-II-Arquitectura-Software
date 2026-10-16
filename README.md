@@ -1,42 +1,59 @@
 # Parcial II - Arquitectura de Software
 
-Monorepositorio del ecosistema de **Microfrontends con Clean Architecture** para el Parcial II de Arquitectura de Software.
+Monorepositorio del ecosistema de **Microfrontends con Clean Architecture** para el Parcial II de Arquitectura de Software (UCEVA).
 
-**Integrante 2 - Módulo de Usuarios (Users)**
+- **Módulo de Productos (Products)**: Microservicio Node.js (:3001) + Microfrontend Angular (:4201)
+- **Módulo de Usuarios (Users)**: Microservicio Spring Boot (:8081) + Microfrontend Angular (:4202)
+
+---
 
 ## Arquitectura General
 
 ```text
-┌──────────────────────────────┐
-│  Client-Host-Angular (:4200) │  ← Host con Navbar (rutas federadas)
-└──────────────┬───────────────┘
-               │ Module Federation (loadRemoteModule → usersMfe)
-┌──────────────▼───────────────┐
-│ Microfrontend-Users-Angular  │  ← MFE Users (Clean Architecture)
-│         (puerto 4202)        │
-└──────────────┬───────────────┘
-               │ HTTP (DataService / UserRepository)
-┌──────────────▼───────────────┐
-│ Microservice-Users-SpringBoot│  ← API REST Users (Clean Architecture)
-│         (puerto 8081)        │
-└──────────────────────────────┘
+                     ┌──────────────────────────────┐
+                     │  Client-Host-Angular (:4200) │  ← Host con Navbar (rutas federadas)
+                     └───────┬──────────────┬───────┘
+                             │              │
+     loadRemoteModule        │              │ loadRemoteModule
+     (productsMfe)           │              │ (usersMfe)
+             ┌───────────────┘              └───────────────┐
+             ▼                                              ▼
+┌──────────────────────────────┐              ┌──────────────────────────────┐
+│ Microfrontend-Products-Angular│              │ Microfrontend-Users-Angular  │
+│        (puerto 4201)         │              │        (puerto 4202)         │
+└──────────────┬───────────────┘              └──────────────┬───────────────┘
+               │ HTTP                                        │ HTTP
+┌──────────────▼───────────────┐              ┌──────────────▼───────────────┐
+│  Microservice-Products-Node  │              │Microservice-Users-SpringBoot │
+│        (puerto 3001)         │              │        (puerto 8081)         │
+└──────────────────────────────┘              └──────────────────────────────┘
 ```
+
+---
 
 ## Puertos y Proyectos
 
 | Proyecto | Tecnología | Puerto | Rol |
 |---|---|---|---|
-| `Client-Host-Angular` | Angular 17 + Module Federation + SCSS | **4200** | Host: Navbar (`routerLink="/users"`) y orquestación de microfrontends remotos |
-| `Microfrontend-Users-Angular` | Angular 17 + Clean Architecture + Module Federation | **4202** | Microfrontend 2: Gestión de Usuarios (expone `./routes` como `usersMfe`) |
-| `Microservice-Users-SpringBoot` | Spring Boot 3 + Java 17 | **8081** | Microservicio 2: API REST de Usuarios con Swagger |
+| `Client-Host-Angular` | Angular 17/20 + Module Federation + SCSS | **4200** | Host: Navbar (`/products`, `/users`) y orquestación de microfrontends remotos |
+| `Microfrontend-Products-Angular` | Angular 20 + Clean Architecture + Module Federation | **4201** | Microfrontend: Gestión de Productos (expone `./routes` como `productsMfe`) |
+| `Microservice-Products-Node` | Node.js + Express + TypeScript + Clean Architecture | **3001** | Microservicio: API REST de Productos con Swagger |
+| `Microfrontend-Users-Angular` | Angular 17 + Clean Architecture + Module Federation | **4202** | Microfrontend: Gestión de Usuarios (expone `./routes` como `usersMfe`) |
+| `Microservice-Users-SpringBoot` | Spring Boot 3 + Java 17 | **8081** | Microservicio: API REST de Usuarios con Swagger |
+
+---
 
 ## Client Host: `Client-Host-Angular` (puerto 4200)
 
-Host colaborativo (los 3 integrantes registran aquí sus microfrontends). El Integrante 2 registró únicamente `usersMfe`:
+Host colaborativo que integra los microfrontends remotos a través de Webpack Module Federation:
 
-- `webpack.config.js` → remoto `usersMfe: 'http://localhost:4202/remoteEntry.js'`.
-- `src/app/app.routes.ts` → ruta `/users` con `loadRemoteModule` (`exposedModule: './routes'`) y redirección `'' → /users`.
-- `src/app/app.component.html` → Navbar con `routerLink="/users"` y `routerLinkActive="active"` (espacio reservado para los Integrantes 1 y 3).
+- `webpack.config.js`:
+  - `usersMfe: 'http://localhost:4202/remoteEntry.js'`
+  - `productsMfe: 'http://localhost:4201/remoteEntry.js'`
+- `src/app/app.routes.ts`:
+  - Ruta `/products` con `loadRemoteModule` (`exposedModule: './routes'`) cargando `PRODUCTS_ROUTES`.
+  - Ruta `/users` con `loadRemoteModule` (`exposedModule: './routes'`) cargando `USERS_ROUTES`.
+- `src/app/app.component.html`: Navbar con enlaces activos (`routerLinkActive="active"`) hacia `/products` y `/users`.
 
 **Ejecución:**
 ```bash
@@ -45,7 +62,82 @@ npm install
 npm start
 ```
 
-## Microfrontend 2: `Microfrontend-Users-Angular` (puerto 4202)
+---
+
+## Módulo de Productos (Products)
+
+### Microfrontend: `Microfrontend-Products-Angular` (puerto 4201)
+
+Implementado bajo **Clean Architecture** estricta:
+
+- **Dominio (`core/domain`)**:
+  - Modelo `ProductModel` (`id`, `name`, `category`, `price`, `available`, `featured`).
+  - Contrato abstracto `ProductRepository` utilizado como Injection Token en Angular.
+- **Aplicación (`core/application/usecases`)**:
+  - `GetAllProductsUseCase`: Ejecuta la obtención de todos los productos.
+  - `GetAvailableProductsUseCase`: Obtiene únicamente productos con stock disponible (`available: true`).
+  - `GetFeaturedProductsUseCase`: Obtiene únicamente productos destacados (`featured: true`).
+- **Infraestructura (`core/infrastructure`)**:
+  - `DataService`: Wrapper de `HttpClient` para peticiones HTTP con tipado estricto.
+  - 3 Implementaciones intercambiables de `ProductRepository`:
+    1. `ProductLocalRepositoryImpl`: Datos simulados en memoria (`products.mocks.ts`).
+    2. `ProductNodeRepositoryImpl`: Consumo de la API Node.js (`http://localhost:3001/api/products`). **(Activa por defecto)**.
+    3. `ProductSpringBootRepositoryImpl`: Consumo alternativo de Spring Boot (`http://localhost:8081/api/products`).
+- **Presentación (`presentation`)**:
+  - `ProductsPage` (Smart Component): Inyecta **únicamente** los 3 casos de uso, controla el estado reactivo (`State<ProductModel[]>`) y dispara los filtros mediante botones de acción.
+  - `ProductsTableComponent` (Dumb Component): Recibe `@Input() products: ProductModel[]` y renderiza la tabla con badges para disponibilidad y destacados.
+- **Pruebas y Calidad**:
+  - Cobertura de pruebas unitarias en **Jest al 100%** (11 suites, 45 pruebas pasando).
+  - Documentación técnica **Compodoc al 100%** con bloques JSDoc en español.
+
+**Ejecución:**
+```bash
+cd Microfrontend-Products-Angular
+npm install
+npm start
+npm test -- --coverage   # Jest: Cobertura 100% (> 90% exigido)
+npm run doc              # Compodoc: Documentación 100%
+```
+
+---
+
+### Microservicio: `Microservice-Products-Node` (puerto 3001)
+
+API REST construida con Node.js, Express y TypeScript bajo **Clean Architecture**:
+
+- **Dominio (`src/domain`)**:
+  - Modelo `ProductModel` e interfaz `ProductRepository`.
+- **Aplicación (`src/application/usecases`)**:
+  - Casos de uso `GetAllProductsUseCase`, `GetAvailableProductsUseCase` y `GetFeaturedProductsUseCase`.
+- **Infraestructura (`src/infrastructure/repositories`)**:
+  - `ProductRepositoryImpl`: Generación de 15 productos realistas con `@faker-js/faker`, aplicando filtrado dinámico por `available` y `featured`.
+- **Presentación (`src/presentation`)**:
+  - Controlador `ProductsController` y enrutador `ProductsRoutes` montados bajo `/api/products`.
+- **Swagger / OpenAPI**:
+  - Esquema `Product` registrado y documentado en `/api/docs`.
+
+**Endpoints:**
+
+| Método | Ruta | Caso de Uso |
+|---|---|---|
+| `GET` | `http://localhost:3001/api/products` | Caso de uso 1: Todos los productos |
+| `GET` | `http://localhost:3001/api/products/available` | Caso de uso 2: Productos con stock disponible |
+| `GET` | `http://localhost:3001/api/products/featured` | Caso de uso 3: Productos destacados |
+
+**Documentación Swagger:** `http://localhost:3001/api/docs`
+
+**Ejecución:**
+```bash
+cd Microservice-Products-Node
+npm install
+npm run dev
+```
+
+---
+
+## Módulo de Usuarios (Users)
+
+### Microfrontend: `Microfrontend-Users-Angular` (puerto 4202)
 
 Clean Architecture con las capas `core/domain`, `core/application`, `core/infrastructure` y `presentation`:
 
@@ -59,11 +151,13 @@ Clean Architecture con las capas `core/domain`, `core/application`, `core/infras
 cd Microfrontend-Users-Angular
 npm install
 npm start
-npm test -- --coverage   # Jest: 10 suites, 31 tests, cobertura 100% (exigida > 90%)
+npm test -- --coverage   # Jest: 10 suites, 31 tests, cobertura 100%
 npm run doc              # Compodoc: documentación técnica 100%
 ```
 
-## Microservicio 2: `Microservice-Users-SpringBoot` (puerto 8081)
+---
+
+### Microservicio: `Microservice-Users-SpringBoot` (puerto 8081)
 
 API REST bajo Clean Architecture (`domain` → `application` → `infrastructure` → `presentation`), consumida por el microfrontend vía `http://localhost:8081/api/users`.
 
@@ -77,27 +171,41 @@ API REST bajo Clean Architecture (`domain` → `application` → `infrastructure
 
 **Documentación Swagger:** `http://localhost:8081/swagger-ui.html` (OpenAPI en `http://localhost:8081/api-docs`).
 
-**Ejecución** (requiere Java 17 y Maven):
+**Ejecución:**
 ```bash
 cd Microservice-Users-SpringBoot
 mvn spring-boot:run
 ```
 
+---
+
 ## Ejecución completa del ecosistema (orden recomendado)
 
 ```bash
-cd Microservice-Users-SpringBoot && mvn spring-boot:run     # 1. Levantar el microservicio (8081)
-cd Microfrontend-Users-Angular && npm start                 # 2. Levantar el microfrontend (4202)
-cd Client-Host-Angular && npm start                         # 3. Levantar el host (4200)
+# 1. Levantar microservicios backend
+cd Microservice-Products-Node && npm run dev                # Puerto 3001 (Node.js)
+cd Microservice-Users-SpringBoot && mvn spring-boot:run     # Puerto 8081 (Spring Boot)
+
+# 2. Levantar microfrontends remotos
+cd Microfrontend-Products-Angular && npm start              # Puerto 4201 (Angular)
+cd Microfrontend-Users-Angular && npm start                 # Puerto 4202 (Angular)
+
+# 3. Levantar Host integrador
+cd Client-Host-Angular && npm start                         # Puerto 4200 (Host)
 ```
 
-Navegar a `http://localhost:4200` → redirige a `/users` (Navbar → Microfrontend de Usuarios → tabla del microservicio).
+Navegar a `http://localhost:4200` para acceder a la aplicación integrada con navegación fluida entre **Productos** (`/products`) y **Usuarios** (`/users`).
+
+---
 
 ## Ramas de Trabajo
 
 | Rama | Contenido |
 |---|---|
-| `main` | Rama principal |
-| `microservice-users-springboot` | Fases 1-3: Microservicio de Usuarios (Spring Boot, puerto 8081) |
-| `microfrontend-users-angular` | Fases 4-7: Microfrontend de Usuarios (Angular, puerto 4202) |
-| `Client-Host-Angular` | Fase 8: Host (puerto 4200) con navbar y ruta federada `/users`, fusionada a `microfrontend-users-angular` |
+| `main` | Rama principal de producción |
+| `develop` | Rama de integración de desarrollo |
+| `microservice-products-node` | Microservicio de Productos (Node.js/Express/TypeScript, puerto 3001) |
+| `microfrontend-products-angular` | Microfrontend de Productos (Angular 20, puerto 4201) |
+| `client-host-angular` | Host Angular (puerto 4200) con Navbar, rutas federadas y documentación |
+| `microservice-users-springboot` | Microservicio de Usuarios (Spring Boot, puerto 8081) |
+| `microfrontend-users-angular` | Microfrontend de Usuarios (Angular 17, puerto 4202) |
