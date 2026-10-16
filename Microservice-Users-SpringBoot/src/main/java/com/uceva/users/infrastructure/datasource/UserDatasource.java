@@ -7,10 +7,18 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Fuente de datos en memoria para el microservicio de usuarios.
+ * Inicializa datos simulados de estudiantes y docentes de la UCEVA.
+ */
 @Component
 public class UserDatasource {
+
     private final List<User> users;
 
+    /**
+     * Constructor por defecto que inicializa 12 usuarios simulados.
+     */
     public UserDatasource() {
         this.users = IntStream.rangeClosed(1, 12)
                 .mapToObj(i -> new User(
@@ -23,6 +31,11 @@ public class UserDatasource {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retorna la lista en memoria de usuarios.
+     *
+     * @return Lista de usuarios.
+     */
     public List<User> getUsers() {
         return this.users;
     }

@@ -18,15 +18,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
+/**
+ * Controlador REST para la gestión y consulta de Usuarios bajo Clean Architecture.
+ * Expone los endpoints en el prefijo /api/users y documentación OpenAPI Swagger.
+ */
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
 @Tag(name = "Users", description = "Microservicio de Usuarios bajo Clean Architecture")
 public class UserController {
+
     private final GetAllUsersUseCase getAllUsersUseCase;
     private final GetActiveUsersUseCase getActiveUsersUseCase;
     private final GetAdminUsersUseCase getAdminUsersUseCase;
 
+    /**
+     * Constructor con inyección de los casos de uso de usuarios.
+     *
+     * @param getAllUsersUseCase    Caso de uso para obtener todos los usuarios.
+     * @param getActiveUsersUseCase Caso de uso para obtener usuarios activos.
+     * @param getAdminUsersUseCase  Caso de uso para obtener usuarios administradores.
+     */
     public UserController(
             GetAllUsersUseCase getAllUsersUseCase,
             GetActiveUsersUseCase getActiveUsersUseCase,
@@ -37,6 +49,11 @@ public class UserController {
         this.getAdminUsersUseCase = getAdminUsersUseCase;
     }
 
+    /**
+     * Obtiene el listado completo de usuarios.
+     *
+     * @return Respuesta HTTP 200 con la lista de todos los usuarios.
+     */
     @GetMapping
     @Operation(summary = "Caso de Uso 1: Obtener todos los usuarios")
     @ApiResponse(
@@ -54,6 +71,11 @@ public class UserController {
         return ResponseEntity.ok(this.getAllUsersUseCase.execute());
     }
 
+    /**
+     * Obtiene únicamente los usuarios que están activos.
+     *
+     * @return Respuesta HTTP 200 con la lista de usuarios activos.
+     */
     @GetMapping("/active")
     @Operation(summary = "Caso de Uso 2: Obtener usuarios activos")
     @ApiResponse(
@@ -71,6 +93,11 @@ public class UserController {
         return ResponseEntity.ok(this.getActiveUsersUseCase.execute());
     }
 
+    /**
+     * Obtiene los usuarios que tienen rol de administrador.
+     *
+     * @return Respuesta HTTP 200 con la lista de administradores.
+     */
     @GetMapping("/admins")
     @Operation(summary = "Caso de Uso 3: Obtener usuarios con rol ADMIN")
     @ApiResponse(
