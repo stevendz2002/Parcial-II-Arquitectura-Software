@@ -11,6 +11,6 @@ import { RouterOutlet } from '@angular/router';
   template: `<router-outlet></router-outlet>`,
 })
 export class AppComponent {
-  /** Título del microfrontend */
+  /** Título identificador del Microfrontend de Usuarios */
   public title = 'Microfrontend-Users-Angular';
 }

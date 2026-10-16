@@ -41,12 +41,9 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -65,10 +62,7 @@
           "options": {
             "port": 4202,
             "publicHost": "http://localhost:4202",
-            "extraWebpackConfig": "./webpack.config.js",
-            "headers": {
-              "Access-Control-Allow-Origin": "*"
-            }
+            "extraWebpackConfig": "./webpack.config.js"
           }
         }
       }

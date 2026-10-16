@@ -2,6 +2,7 @@ const { shareAll, withModuleFederationPlugin } = require('@angular-architects/mo
 
 module.exports = withModuleFederationPlugin({
   name: 'usersMfe',
+  filename: 'remoteEntry.js',
   exposes: {
     './routes': './src/app/users.routes.ts',
   },
